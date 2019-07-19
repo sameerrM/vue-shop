@@ -24,16 +24,33 @@
           </ul>
           <form class="form-inline mt-2 mt-md-0">
             <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            <button class="btn btn-outline-success my-2 my-sm-0" @click="show">Search</button>
           </form>
         </div>
       </div>
     </nav>
+    <app-login></app-login>
   </header>
 </template>
 
 <script>
-  export default {}
+  import Login from './Login'
+
+  export default {
+    components: {
+      appLogin: Login
+    },
+
+    methods:{
+
+      show (e) {
+        e.preventDefault();
+        this.$modal.show('login-modal',{
+          height: 'auto'
+        });
+      },
+    }
+  }
 </script>
 
 <style>

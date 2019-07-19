@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <app-navbar></app-navbar>
     <app-hero></app-hero>
     <app-products></app-products>
     <div class="container h-100">
@@ -22,11 +23,14 @@
 <script>
   import Hero from '../components/Hero'
   import Products from '../sections/Products'
+  import Navbar from '../constructs/Navbar'
+
 
   export default {
     components: {
       appHero: Hero,
-      appProducts: Products
-    }
+      appProducts: Products,
+      appNavbar: Navbar
+    },
   }
 </script>
