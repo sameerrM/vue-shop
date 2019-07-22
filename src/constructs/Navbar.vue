@@ -24,7 +24,7 @@
           </ul>
           <form class="form-inline mt-2 mt-md-0">
             <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" @click="show">Search</button>
+            <button class="btn btn-outline-success my-2 my-sm-0" @click.prevent="show">Login</button>
           </form>
         </div>
       </div>
@@ -40,15 +40,12 @@
     components: {
       appLogin: Login
     },
-
-    methods:{
-
-      show (e) {
-        e.preventDefault();
+    methods: {
+      show () {
         this.$modal.show('login-modal',{
           height: 'auto'
         });
-      },
+      }
     }
   }
 </script>
