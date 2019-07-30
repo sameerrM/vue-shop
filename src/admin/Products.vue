@@ -16,30 +16,8 @@
       </div>
       <hr>
       <div class="product-test">
-        <h3>Basic CRUD in Firebase</h3>
-        <br>
-        <form>
-          <div class="form-group row">
-            <label for="product_name" class="col-sm-2 col-form-label">Email</label>
-            <div class="col-sm-10">
-              <input type="text" v-model="product.name" class="form-control" id="product_name"
-                     placeholder="Product Name">
-            </div>
-          </div>
-          <div class="form-group row">
-            <label for="product_price" class="col-sm-2 col-form-label">Password</label>
-            <div class="col-sm-10">
-              <input type="text" v-model="product.price" class="form-control" id="product_price" placeholder="Price">
-            </div>
-          </div>
-          <div class="form-group row">
-            <div class="col-sm-10">
-              <button @click="saveData" class="btn btn-primary">Save data</button>
-            </div>
-          </div>
-        </form>
-        <hr>
-        <h3>Products list</h3>
+        <h3 class="d-inline-block">Products list</h3>
+        <button @click="addNew" class="btn btn-primary float-right">Add Product</button>
         <div class="table-responsive">
           <table class="table">
             <thead>
@@ -51,11 +29,15 @@
             </thead>
             <tbody>
             <tr v-for="product in products">
-              <td>{{ product.data().name }}</td>
-              <td>{{ product.data().price }}</td>
+              <td>
+                {{ product.name }}
+              </td>
+              <td>
+                {{ product.price }}
+              </td>
               <td>
                 <button @click="editProduct(product)" class="btn btn-primary mr-2">Edit</button>
-                <button @click="deleteProduct(product.id)" class="btn btn-danger">Delete</button>
+                <button @click="deleteProduct(product)" class="btn btn-danger">Delete</button>
               </td>
             </tr>
             </tbody>
@@ -64,7 +46,7 @@
       </div>
     </div>
     <modal name="edit-modal"
-           :width="400"
+           :width="600"
            height="auto"
            :adaptive="true"
            class="edit-modal"
@@ -74,13 +56,25 @@
           <h3 class="text-center">Edit Product</h3>
           <br>
           <div class="form-group">
-            <input type="text" v-model="product.name" class="form-control" aria-describedby="emailHelp" placeholder="Product Name">
+            <input v-model="product.name"  type="text" class="form-control" aria-describedby="emailHelp" placeholder="Product Name">
           </div>
           <div class="form-group">
-            <input type="text" v-model="product.price" class="form-control" placeholder="Price">
+            <vue-editor v-model="product.description"></vue-editor>
           </div>
-          <button @click="closeModal" class="btn btn-secondary mr-2">Close</button>
-          <button @click.prevent="updateProduct()" class="btn btn-primary">Save changes</button>
+          <hr>
+          <div class="form-group">
+            <input v-model="product.price" type="text" class="form-control" placeholder="Product price">
+          </div>
+          <div class="form-group">
+            <input v-model="product.tag" type="text" class="form-control" placeholder="Product tags">
+          </div>
+          <div class="form-group">
+            <label for="exampleFormControlFile1">Example file input</label>
+            <input type="file" class="form-control-file" id="exampleFormControlFile1">
+          </div>
+          <button @click.prevent="closeModal" class="btn btn-secondary mr-2">Close</button>
+          <button v-if="modal == 'new'" @click.prevent="addProduct()" class="btn btn-primary">Save changes</button>
+          <button v-if="modal == 'edit'" @click.prevent="updateProduct()" class="btn btn-primary">Apply changes</button>
         </form>
       </div>
     </modal>
@@ -88,6 +82,7 @@
 </template>
 
 <script>
+  import { VueEditor } from "vue2-editor"
   import { db } from '../firebase'
 
   export default {
@@ -96,93 +91,90 @@
         products: [],
         product: {
           name: null,
-          price: null
+          description: null,
+          price: null,
+          tag: null,
+          image: null
         },
-        activeItem: null
+        activeItem: null,
+        modal: null
+      }
+    },
+
+    components: {
+      VueEditor
+    },
+
+    firestore() {
+      return{
+        products: db.collection('products')
       }
     },
 
     methods: {
 
-      watcher() {
-        db.collection("products").onSnapshot((querySnapshot) => {
-            this.products = [];
-            querySnapshot.forEach((doc) => {
-              this.products.push(doc);
-            });
-          });
+      addNew() {
+        this.modal = 'new';
+        this.$modal.show('edit-modal');
       },
 
       updateProduct() {
-
-        db.collection("products").doc(this.activeItem).update(this.product)
-          .then(() => {
-            this.$modal.hide('edit-modal');
-            this.watcher();
-            console.log("Document successfully updated!");
-          })
-          .catch((error) => {
-            // The document probably doesn't exist.
-            console.error("Error updating document: ", error);
-          });
-
+        this.$firestore.products.doc(this.product.id).update(this.product)
+        Toast.fire({
+          type: 'success',
+          title: 'Updated successfully'
+        })
+        this.$modal.hide('edit-modal');
       },
 
       editProduct(product) {
+        this.modal = 'edit';
+        this.product = product;
         this.$modal.show('edit-modal');
-
-        this.product = product.data();
-        this.activeItem = product.id;
       },
 
-      closeModal(e) {
-        e.preventDefault();
+      closeModal() {
         this.$modal.hide('edit-modal');
       },
 
       deleteProduct(doc) {
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this!",
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+          if (result.value) {
 
-        if(confirm('Are you sure ?')) {
-          db.collection('products').doc(doc).delete()
-            .then(() => {
-              console.log('Document successfully deleted!');
-            })
-            .catch((error) => {
-              console.error('Error removing document: ', error);
-            })
-        } else {
+            this.$firestore.products.doc(doc['.key']).delete()
 
-        }
+            Toast.fire({
+              type: 'success',
+              title: 'Deleted successfully'
+            })
+          }
+        })
       },
 
       readData() {
-        db.collection('products').get().then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            this.products.push(doc);
-          });
-        });
       },
 
-      saveData (e) {
-        e.preventDefault()
-
-        db.collection('products').add(this.product)
-          .then((docRef) => {
-            console.log('Document written with ID: ', docRef.id)
-            this.readData();
-          })
-          .catch(function (error) {
-            console.error('Error adding document: ', error)
-          })
+      addProduct () {
+        this.$firestore.products.add(this.product);
+        Toast.fire({
+          type: 'success',
+          title: 'Product created successfully'
+        })
+        this.$modal.hide('edit-modal');
       },
-      // reset () {
-      //   Object.assign(this.$data, this.$options.data.apply(this))
-      // }
+
     },
 
     created() {
-      this.readData()
+
     },
   }
 </script>
