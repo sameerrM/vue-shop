@@ -3,11 +3,16 @@
     <!-- Fixed navbar -->
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
       <div class="container">
-        <router-link to="/" class="navbar-brand" tag="a">
-          Vue Shop
-        </router-link>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
-                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <router-link to="/" class="navbar-brand" tag="a">Vue Shop</router-link>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarCollapse"
+          aria-controls="navbarCollapse"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -23,7 +28,12 @@
             </router-link>
           </ul>
           <form class="form-inline mt-2 mt-md-0">
-            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+            <input
+              class="form-control mr-sm-2"
+              type="text"
+              placeholder="Search"
+              aria-label="Search"
+            />
             <button class="btn btn-outline-success my-2 my-sm-0" @click.prevent="show">Login</button>
           </form>
         </div>
@@ -34,23 +44,22 @@
 </template>
 
 <script>
-  import Login from './Login'
+import Login from "./Login";
 
-  export default {
-    components: {
-      appLogin: Login
-    },
-    methods: {
-      show () {
-        this.$modal.show('login-modal',{
-          height: 'auto'
-        });
-      }
+export default {
+  components: {
+    appLogin: Login
+  },
+  methods: {
+    show() {
+      this.$modal.show("login-modal", {
+        height: "auto"
+      });
     }
   }
+};
 </script>
 
 <style>
-
 </style>
 

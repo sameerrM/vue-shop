@@ -16,16 +16,17 @@
           <!-- sidebar-header  -->
           <div class="sidebar-item sidebar-header">
             <div class="user-pic">
-              <img class="img-responsive img-rounded" src="/img/user.png" alt="User picture">
+              <img class="img-responsive img-rounded" src="/img/user.png" alt="User picture" />
             </div>
             <div class="user-info">
-              <span class="user-name">Jhon
-                  <strong>Smith</strong>
+              <span class="user-name">
+                Jhon
+                <strong>Smith</strong>
               </span>
               <span class="user-role">Administrator</span>
               <span class="user-status">
-                  <i class="fa fa-circle"></i>
-                  <span>Online</span>
+                <i class="fa fa-circle"></i>
+                <span>Online</span>
               </span>
             </div>
           </div>
@@ -33,17 +34,17 @@
           <div class="sidebar-item sidebar-search">
             <div>
               <div class="input-group">
-                <input type="text" class="form-control search-menu" placeholder="Search...">
+                <input type="text" class="form-control search-menu" placeholder="Search..." />
                 <div class="input-group-append">
                   <span class="input-group-text">
-                      <i class="fa fa-search" aria-hidden="true"></i>
+                    <i class="fa fa-search" aria-hidden="true"></i>
                   </span>
                 </div>
               </div>
             </div>
           </div>
           <!-- sidebar-menu  -->
-          <div class=" sidebar-item sidebar-menu">
+          <div class="sidebar-item sidebar-menu">
             <ul>
               <li class="header-menu">
                 <span>Menu</span>
@@ -95,29 +96,34 @@
 </template>
 
 <script>
-  import { fb } from '../firebase'
+import { fb } from "../firebase";
 
-  export default {
-    data () {
-      return {
-        isActive: true
-      }
-    },
-    methods: {
-      logout () {
-        fb.auth().signOut()
-          .then(() => {
-            this.$router.replace('/');
-          })
-          .catch((err) => {
-            consol.log(err);
-          })
-      }
+export default {
+  data() {
+    return {
+      isActive: true
+    };
+  },
+  methods: {
+    logout() {
+      fb.auth()
+        .signOut()
+        .then(() => {
+          this.$router.replace("/");
+          Toast.fire({
+            type: "success",
+            title: "Successfuly logout"
+          });
+        })
+        .catch(err => {
+          consol.log(err);
+        });
     }
   }
+};
 </script>
 
 <style scoped>
-  @import 'Admin.css';
+@import "Admin.css";
 </style>
 

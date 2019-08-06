@@ -8,15 +8,16 @@ import Overview from './admin/Overview'
 import Products from './admin/Products'
 import Orders from './admin/Orders'
 import Profile from './admin/Profile'
-import {fb} from './firebase'
+import {
+  fb
+} from './firebase'
 
 Vue.use(Router)
 
 const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes: [
-    {
+  routes: [{
       path: '/',
       name: 'home',
       component: Home
@@ -25,9 +26,10 @@ const router = new Router({
       path: '/admin',
       name: 'admin',
       component: Admin,
-      meta: { requiresAuth: true },
-      children: [
-        {
+      meta: {
+        requiresAuth: true
+      },
+      children: [{
           path: 'overview',
           name: 'overview',
           component: Overview

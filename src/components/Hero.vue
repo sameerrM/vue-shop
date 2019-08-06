@@ -4,9 +4,7 @@
       <div class="row h-100 justify-content-center align-items-center">
         <div class="col-md-5">
           <div class="hero-content">
-            <h1 class="hero-title">
-              Vue Shop For Developers
-            </h1>
+            <h1 class="hero-title">Vue Shop For Developers</h1>
             <p>
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos numquam tempora, iure delectus totam minus
               quam aperiam ratione dolores magni voluptates ut necessitatibus odio ipsum fuga, voluptas ab praesentium
@@ -20,7 +18,7 @@
         </div>
         <div class="col-md-7">
           <div class="graphic">
-            <img src="/img/svg/graphic.svg" alt="">
+            <img src="/img/svg/graphic.svg" alt />
           </div>
         </div>
       </div>
@@ -29,10 +27,10 @@
 </template>
 
 <style lang="scss" scoped>
-  .hero {
-    padding-top: 7rem;
-    width: 100%;
-    height: 500px;
-    text-align: left;
-  }
+.hero {
+  padding-top: 7rem;
+  width: 100%;
+  height: 500px;
+  text-align: left;
+}
 </style>
