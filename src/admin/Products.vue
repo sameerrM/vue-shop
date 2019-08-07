@@ -74,6 +74,7 @@
               @keyup.188="addTag"
             />
           </div>
+
           <div class="d-flex">
             <p v-for="tag in product.tags">
               <span class="p-1">{{tag}}</span>
@@ -88,6 +89,16 @@
               id="exampleFormControlFile1"
             />
           </div>
+
+          <div class="form-group d-flex">
+            <div class="p-1" v-for="(image, index) in product.images">
+              <div class="img-wrapp">
+                <img :src="image" width="80px" alt />
+                <span class="delete-img" @click="deleteImage(image,index)">X</span>
+              </div>
+            </div>
+          </div>
+
           <button @click.prevent="closeModal" class="btn btn-secondary mr-2">Close</button>
           <button
             v-if="modal == 'new'"
@@ -118,7 +129,7 @@ export default {
         description: null,
         price: null,
         tags: [],
-        image: null
+        images: []
       },
       activeItem: null,
       modal: null,
@@ -137,35 +148,63 @@ export default {
   },
 
   methods: {
+    deleteImage(img, index) {
+      let image = fb.storage().refFromURL(img);
+
+      this.product.images.splice(index, 1);
+
+      image
+        .delete()
+        .then(function() {
+          console.log("image deleted");
+        })
+        .catch(function(error) {
+          console.log("an error occured");
+        });
+    },
+
     uploadImage(e) {
-      let file = e.target.files[0];
+      if (e.target.files[0]) {
+        let file = e.target.files[0];
 
-      var storageRef = fb.storage().ref("products/" + file.name);
+        var storageRef = fb.storage().ref("products/" + file.name);
 
-      let uploadTask = storageRef.put(file);
+        let uploadTask = storageRef.put(file);
 
-      uploadTask.on(
-        "state_changed",
-        snapshot => {},
-        error => {
-          // Handle unsuccessful uploads
-        },
-        () => {
-          uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
-            this.product.image = downloadURL;
-            console.log("File available at", downloadURL);
-          });
-        }
-      );
+        uploadTask.on(
+          "state_changed",
+          snapshot => {},
+          error => {
+            // Handle unsuccessful uploads
+          },
+          () => {
+            uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
+              this.product.images.push(downloadURL);
+              console.log("File available at", downloadURL);
+            });
+          }
+        );
+      }
     },
 
     addTag() {
-      this.products.tags.push(this.tag);
+      this.product.tags.push(this.tag);
       this.tag = "";
+    },
+
+    reset() {
+      this.product = {
+        name: null,
+        description: null,
+        price: null,
+        tags: [],
+        images: []
+      };
     },
 
     addNew() {
       this.modal = "new";
+      this.reset();
       this.$modal.show("edit-modal");
     },
 
@@ -225,8 +264,22 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .edit-products {
   padding: 20px 15px;
+}
+.v--modal-overlay {
+  overflow: auto;
+}
+.img-wrapp {
+  position: relative;
+  .delete-img {
+    position: absolute;
+    top: -18px;
+    right: -5px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
 }
 </style>
