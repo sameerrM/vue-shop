@@ -79,7 +79,7 @@
               placeholder="Password"
             />
           </div>
-          <button @click="register" class="btn btn-primary">Signup</button>
+          <button @click.prevent="register" class="btn btn-primary">Signup</button>
         </form>
       </div>
     </div>
@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import { fb } from "../firebase";
+import { fb, db } from "../firebase";
 export default {
   data() {
     return {
@@ -127,9 +127,7 @@ export default {
         });
     },
 
-    register: function(e) {
-      e.preventDefault();
-
+    register: function() {
       fb.auth()
         .createUserWithEmailAndPassword(this.email, this.password)
         .then(user => {
@@ -137,6 +135,19 @@ export default {
             type: "success",
             title: `Account created for ${this.email}`
           });
+
+          db.collection("profiles")
+            .doc(user.user.uid)
+            .set({
+              name: this.name
+            })
+            .then(function() {
+              console.log("Document successfully written!");
+            })
+            .catch(function(error) {
+              console.error("Error writing document: ", error);
+            });
+
           this.$router.push("admin");
         })
         .catch(function(error) {

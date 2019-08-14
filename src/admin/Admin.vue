@@ -23,7 +23,7 @@
                 Jhon
                 <strong>Smith</strong>
               </span>
-              <span class="user-role">Administrator</span>
+              <span class="user-role">{{email}}</span>
               <span class="user-status">
                 <i class="fa fa-circle"></i>
                 <span>Online</span>
@@ -101,7 +101,9 @@ import { fb } from "../firebase";
 export default {
   data() {
     return {
-      isActive: true
+      isActive: true,
+      name: null,
+      email: null
     };
   },
   methods: {
@@ -119,6 +121,10 @@ export default {
           consol.log(err);
         });
     }
+  },
+  created() {
+    let user = fb.auth().currentUser;
+    this.email = user.email;
   }
 };
 </script>
