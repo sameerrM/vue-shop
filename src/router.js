@@ -52,9 +52,16 @@ const router = new Router({
       ]
     },
     {
+      path: '/checkout',
+      name: 'checkout',
+      component: () =>
+        import("./views/Checkout.vue")
+    },
+    {
       path: '/about',
       name: 'about',
-      component: About
+      component: () =>
+        import("./views/About.vue")
     }
   ]
 });

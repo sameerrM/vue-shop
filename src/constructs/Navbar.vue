@@ -35,6 +35,7 @@
               aria-label="Search"
             />
             <button class="btn btn-outline-success my-2 my-sm-0" @click.prevent="show">Login</button>
+            <button class="btn btn-outline-info my-2 ml-2 my-sm-0" @click.prevent="cartShow">Cart</button>
           </form>
         </div>
       </div>
@@ -55,6 +56,9 @@ export default {
       this.$modal.show("login-modal", {
         height: "auto"
       });
+    },
+    cartShow() {
+      this.$modal.show("cart-modal");
     }
   }
 };

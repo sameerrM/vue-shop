@@ -2,7 +2,7 @@
   <div class="home">
     <app-navbar></app-navbar>
     <app-hero></app-hero>
-    <app-products></app-products>
+    <productslist></productslist>
     <div class="container h-100">
       <div class="row p-5 h-100 justify-content-center align-items-center">
         <div class="col-md-6">
@@ -15,19 +15,22 @@
         </div>
       </div>
     </div>
+    <cart-modal></cart-modal>
   </div>
 </template>
 
 <script>
 import Hero from "../components/Hero";
-import Products from "../sections/Products";
+import ProductsList from "../sections/ProductList";
 import Navbar from "../constructs/Navbar";
+import CartModal from "../components/CartModal";
 
 export default {
   components: {
     appHero: Hero,
-    appProducts: Products,
-    appNavbar: Navbar
+    productslist: ProductsList,
+    appNavbar: Navbar,
+    cartModal: CartModal
   }
 };
 </script>
