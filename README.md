@@ -1,5 +1,7 @@
 # vue-shop
 
+*Require firebase API
+
 ## Project setup
 ```
 npm install
